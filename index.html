@@ -2448,10 +2448,10 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="step-content ml-11">
               <p class="text-gray-300 mb-3">Create and secure your MEXC exchange account</p>
-              <button class="start-step-btn bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition">Start Step</button>
+              <button class="start-step-btn bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition">Mark Complete</button>
               
               <!-- Developer Note: Step details with checklist for MEXC account setup -->
-              <div class="step-details bg-gray-700 rounded-lg p-6 mt-4 hidden step-detail">
+              <div class="step-details bg-gray-700 rounded-lg p-6 mt-4 step-detail">
                 <div class="text-center mb-4">
                   <div class="text-4xl mb-3">🏦</div>
                   <h5 class="text-lg font-semibold mb-2">MEXC Account Setup Guide</h5>
@@ -2547,10 +2547,10 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="step-content ml-11">
               <p class="text-gray-300 mb-3">Create and secure your MetaMask wallet</p>
-              <button class="start-step-btn bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded transition">Start Step</button>
+              <button class="start-step-btn bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded transition">Mark Complete</button>
               
               <!-- Developer Note: Step details with checklist for MetaMask wallet setup -->
-              <div class="step-details bg-gray-700 rounded-lg p-6 mt-4 hidden step-detail">
+              <div class="step-details bg-gray-700 rounded-lg p-6 mt-4 step-detail">
                 <div class="text-center mb-4">
                   <div class="text-4xl mb-3">🦊</div>
                   <h5 class="text-lg font-semibold mb-2">MetaMask Wallet Setup Guide</h5>
@@ -3076,7 +3076,12 @@ document.getElementById("journalForm").onsubmit = function(e) {
   this.reset();
   document.getElementById("journal-pnl").value = "";
   
-  if (window.renderDashboard) window.renderDashboard();
+  try {
+    if (window.renderDashboard) window.renderDashboard();
+  } catch (e) {
+    console.warn("Dashboard render failed:", e);
+  }
+  
   if (window.renderJournalTable) window.renderJournalTable();
   
   setTimeout(() => {
@@ -3557,7 +3562,9 @@ document.addEventListener('DOMContentLoaded', function() {
       const step = this.closest('.cefi-step');
       const stepDetail = step.querySelector('.step-detail');
       
-      if (stepDetail) {
+      // Only toggle visibility for steps other than step 1 (MEXC Account Setup)
+      // Step 1 guide should remain visible at all times
+      if (stepDetail && index !== 0) {
         stepDetail.classList.toggle('hidden');
       }
       
@@ -3574,7 +3581,9 @@ document.addEventListener('DOMContentLoaded', function() {
       const step = this.closest('.defi-step');
       const stepDetail = step.querySelector('.step-detail');
       
-      if (stepDetail) {
+      // Only toggle visibility for steps other than step 1 (MetaMask Wallet Setup)
+      // Step 1 guide should remain visible at all times
+      if (stepDetail && index !== 0) {
         stepDetail.classList.toggle('hidden');
       }
       
