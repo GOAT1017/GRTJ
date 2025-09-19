@@ -441,6 +441,7 @@
       border-radius: 10px;
       overflow: hidden;
       width: 100%;
+      table-layout: fixed !important;
     }
     /* Journal Form Styles (Legacy support for old form) */
     #journal-form input, #journal-form select, #journal-form button {
@@ -1854,6 +1855,24 @@ document.addEventListener('DOMContentLoaded', function() {
   word-break: break-word !important;
   overflow-wrap: break-word !important;
   max-width: 350px;
+  vertical-align: top !important;
+}
+
+/* Additional table wrapping enhancements */
+#journal-table {
+  table-layout: fixed !important;
+  width: 100% !important;
+}
+
+/* Force wrapping for Asset, Thesis, Emotion, and Mistakes columns specifically */
+#journal-table-body td:nth-child(2),  /* Asset */
+#journal-table-body td:nth-child(5),  /* Thesis */ 
+#journal-table-body td:nth-child(13), /* Emotion */
+#journal-table-body td:nth-child(14)  /* Mistakes */ {
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  max-width: 200px !important;
   vertical-align: top !important;
 }
 </style>
@@ -3472,6 +3491,7 @@ function updateStepUI(track, stepNumber, isCompleted) {
     const status = currentStep.querySelector('.step-status');
     const border = currentStep;
     const button = currentStep.querySelector('.start-step-btn');
+    const stepDetail = currentStep.querySelector('.step-detail');
     
     if (isCompleted) {
       // Mark as completed
@@ -3480,6 +3500,11 @@ function updateStepUI(track, stepNumber, isCompleted) {
       status.textContent = '✅';
       border.classList.remove('border-blue-500', 'border-purple-500', 'border-gray-500');
       border.classList.add('border-green-500');
+      
+      // IMPORTANT: Keep the guide visible when marking as complete
+      if (stepDetail) {
+        stepDetail.classList.remove('hidden');
+      }
       
       if (button) {
         button.textContent = '↩️ Unmark Complete';
@@ -3557,13 +3582,21 @@ document.addEventListener('DOMContentLoaded', function() {
       const step = this.closest('.cefi-step');
       const stepDetail = step.querySelector('.step-detail');
       
-      if (stepDetail) {
-        stepDetail.classList.toggle('hidden');
-      }
+      // Check if this is a "Mark Complete" or "Unmark Complete" operation
+      const isMarkingComplete = this.textContent.includes('Mark Complete');
+      const isUnmarkingComplete = this.textContent.includes('Unmark Complete');
       
-      // Toggle completion
-      if (this.textContent.includes('Mark Complete') || this.textContent.includes('Unmark Complete')) {
+      if (isMarkingComplete || isUnmarkingComplete) {
+        // For completion operations, always ensure guide stays visible
+        if (stepDetail) {
+          stepDetail.classList.remove('hidden');
+        }
         toggleStepCompletion('cefi', index + 1);
+      } else {
+        // For "Start Step" operations, toggle visibility
+        if (stepDetail) {
+          stepDetail.classList.toggle('hidden');
+        }
       }
     });
   });
@@ -3574,13 +3607,21 @@ document.addEventListener('DOMContentLoaded', function() {
       const step = this.closest('.defi-step');
       const stepDetail = step.querySelector('.step-detail');
       
-      if (stepDetail) {
-        stepDetail.classList.toggle('hidden');
-      }
+      // Check if this is a "Mark Complete" or "Unmark Complete" operation
+      const isMarkingComplete = this.textContent.includes('Mark Complete');
+      const isUnmarkingComplete = this.textContent.includes('Unmark Complete');
       
-      // Toggle completion
-      if (this.textContent.includes('Mark Complete') || this.textContent.includes('Unmark Complete')) {
+      if (isMarkingComplete || isUnmarkingComplete) {
+        // For completion operations, always ensure guide stays visible
+        if (stepDetail) {
+          stepDetail.classList.remove('hidden');
+        }
         toggleStepCompletion('defi', index + 1);
+      } else {
+        // For "Start Step" operations, toggle visibility
+        if (stepDetail) {
+          stepDetail.classList.toggle('hidden');
+        }
       }
     });
   });
